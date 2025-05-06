@@ -1,0 +1,32 @@
+<form class="presupuesto-form" action="{{ route('presupuestos.update', $presupuesto->id) }}" method="POST">
+  @csrf
+  @method('PUT')
+
+  @include('partials.datos_cliente')
+  @include('partials.datos_obra')
+  @include('partials._replanteo')
+  @include('partials._mano_obra')
+  @include('partials._materiales')
+  @include('partials._gastos', ['gastosFijos' => $gastosFijos, 'presupuesto' => $presupuesto])
+
+  <table class="table mt-4">
+    <tbody>
+      <tr>
+        <td colspan="5" class="text-end">Precio por m² (general):</td>
+        <td id="precioPorM2">$ 0,00</td>
+      </tr>
+      <tr>
+        <td colspan="5" class="text-end">% Utilidad sobre MO + Materiales:</td>
+        <td id="porcentajeUtilidadSobreCostos">0 %</td>
+      </tr>
+      <tr>
+        <td colspan="5" class="text-end">% Utilidad sobre mano de obra:</td>
+        <td id="porcentajeUtilidad">0 %</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="text-end mt-4">
+    <button class="btn btn-success" type="submit">Guardar presupuesto</button>
+  </div>
+</form>
