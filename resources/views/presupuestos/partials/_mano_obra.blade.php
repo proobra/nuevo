@@ -59,7 +59,7 @@
         <tr class="fila-mano-obra mano-obra-fila">
           <input type="hidden" name="obra_id[]" value="">
           <input type="hidden" name="obra_eliminar[]" value="0">
-    
+    //Cometario Git
           <td><input class="form-control obra_id_tarea" name="obra_id_tarea[]" type="number" value="1"></td>
           <td class="text-center"><input class="form-control text-center" style="width: 40px;" name="obra_fila[]" type="number" value="1" readonly></td>
           <td><input class="form-control obra_comentario" name="obra_comentario[]" type="text" value=""></td>
