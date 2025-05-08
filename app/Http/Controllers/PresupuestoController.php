@@ -18,12 +18,12 @@ class PresupuestoController extends Controller
 
 
 
-    
+
     // formulario de busqueda por id direccion etc
     public function buscar(Request $request)
     {
         $query = $request->input('q');
-    
+
         dd($request->only(['subtotal_materiales','subtotal_mano_obra']));
 
 
@@ -35,10 +35,10 @@ class PresupuestoController extends Controller
             ->orWhere('telefono', 'LIKE', "%$query%")
             ->orderBy('id', 'desc')
             ->get();
-    
+
         return view('presupuestos.index', compact('presupuestos', 'query'));
     }
-    
+
 
       public function create()
   {
@@ -46,24 +46,24 @@ class PresupuestoController extends Controller
     $presupuesto->replanteos = collect();
     $presupuesto->manoDeObra = collect();
     $presupuesto->materiales = collect();
-    
+
     return view('presupuestos.edit', compact('presupuesto'));
  }
-   
-   
+
+
  public function store(Request $request)
  {
      // Validación básica
      $request->validate([
          'titulo' => 'nullable|string|max:255', // lo hacemos opcional, lo completamos abajo
      ]);
- 
+
      // Título inteligente: si no viene, lo armamos
      $titulo = $request->input('titulo')
          ?: ($request->input('presupuesto_padre_id')
              ? 'Presupuesto hijo de ' . $request->input('presupuesto_padre_id')
              : 'nuevo presupuesto');
- 
+
      // Crear el presupuesto
      $presupuesto = Presupuesto::create([
          'presupuesto_padre_id' => $request->input('presupuesto_padre_id'),
@@ -84,7 +84,7 @@ class PresupuestoController extends Controller
          'superficie' => $request->input('superficie') ?? 0,
          'caratula' => $request->input('caratula') ?? '',
      ]);
- 
+
      // Guardar REPLANTEO (si lo hay)
      if ($request->has('replanteo_descripcion')) {
          foreach ($request->input('replanteo_descripcion') as $i => $descripcion) {
@@ -97,7 +97,7 @@ class PresupuestoController extends Controller
              ]);
          }
      }
- 
+
      // Guardar MATERIALES (si los hay)
      if ($request->has('materiales')) {
          foreach ($request->input('materiales') as $material) {
@@ -112,7 +112,7 @@ class PresupuestoController extends Controller
              ]);
          }
      }
- 
+
      // Guardar MANO DE OBRA (si la hay)
      if ($request->has('obra_categoria')) {
          foreach ($request->input('obra_categoria') as $i => $categoria) {
@@ -126,31 +126,31 @@ class PresupuestoController extends Controller
              ]);
          }
      }
- 
+
      return redirect()->route('presupuestos.edit', $presupuesto->id)
                       ->with('success', 'Presupuesto creado correctamente.');
  }
- 
 
 
 
-    
+
+
     public function update(Request $request, $id)
     {
-       
+
         $presupuesto = Presupuesto::findOrFail($id);
 
               // 🟰 Primero guardar los subtotales ocultos (hidden inputs)
-              $presupuesto->subtotal_mano_obra = $request->input('input_subtotal_mano_obra', 0);
-              $presupuesto->subtotal_materiales = $request->input('input_subtotal_materiales', 0);
-              $presupuesto->subtotal_gastos_fijos = $request->input('input_subtotal_gastos_fijos', 0);
-              $presupuesto->utilidad_monto = $request->input('input_utilidad_monto', 0);
-              $presupuesto->subtotal_general = $request->input('input_subtotal_general', 0);
-              $presupuesto->iva_monto = $request->input('input_iva_monto', 0);
-              $presupuesto->bps_monto = $request->input('input_bps_monto', 0);
-              $presupuesto->total_final = $request->input('input_total_final', 0);
-              
-              
+              $presupuesto->subtotal_mano_obra = $request->input('subtotal_mano_obra', 0);
+              $presupuesto->subtotal_materiales = $request->input('subtotal_materiales', 0);
+              $presupuesto->subtotal_gastos_fijos = $request->input('subtotal_gastos_fijos', 0);
+              $presupuesto->utilidad_monto = $request->input('utilidad_monto', 0);
+              $presupuesto->subtotal_general = $request->input('subtotal_general', 0);
+              $presupuesto->iva_monto = $request->input('iva_monto', 0);
+              $presupuesto->bps_monto = $request->input('bps_monto', 0);
+              $presupuesto->total_final = $request->input('total_final', 0);
+
+
 
     // 🛠️ Luego seguir con actualizar los datos generales (empresa, cliente, etc.)
     $presupuesto->empresa = $request->empresa;
@@ -166,7 +166,7 @@ class PresupuestoController extends Controller
     $presupuesto->bps_porcentaje = $request->bps_porcentaje ?? 0;
 
     $presupuesto->save();
-    
+
         // 1. Actualizar datos generales
         $presupuesto->update([
             'cliente' => $request->input('cliente'),
@@ -187,13 +187,13 @@ class PresupuestoController extends Controller
             'superficie' => $request->input('superficie') ?? 0,
             // otros campos si tenés...
         ]);
-    
+
         // 2. Guardar o actualizar replanteos
         $descripciones = $request->input('replanteo_descripcion', []);
         $ids = $request->input('replanteo_id', []);
         $eliminados = $request->input('replanteo_eliminar', []);
         $replanteoIds = [];
-        
+
         foreach ($descripciones as $i => $descripcion) {
             // Si la fila fue marcada para eliminar
             if (isset($eliminados[$i]) && $eliminados[$i] == 1) {
@@ -202,7 +202,7 @@ class PresupuestoController extends Controller
                 }
                 continue;
             }
-        
+
             // Crear o actualizar
             if (!empty($descripcion)) {
                 $replanteo = $presupuesto->replanteos()->updateOrCreate(
@@ -219,15 +219,15 @@ class PresupuestoController extends Controller
                 $replanteoIds[$i] = $replanteo->id;
             }
         }
- 
+
 
 
 
 
 
         // Asegurar que exista el replanteo con orden 1
-if ($request->has('mano_obra')) {
-    foreach ($request->mano_obra as $i => $fila) {
+if ($request->has('obra_comentario')) {
+    foreach ($request->obra_comentario as $i => $fila) {
         // 👉 Manejar eliminación
         if (!empty($fila['eliminar']) && $fila['eliminar'] == 1 && !empty($fila['id'])) {
             \App\Models\ManoDeObra::destroy($fila['id']);
@@ -235,7 +235,7 @@ if ($request->has('mano_obra')) {
         }
 
         // 1. Obtener el número de orden ingresado
-        $ordenIngresado = $fila['orden'] ?? 1;
+        $ordenIngresado = $request->input('obra_id_tarea')[$i] ?? 1;
 
         // 2. Buscar o crear automáticamente el Replanteo para ese orden
         $replanteo = \App\Models\Replanteo::where('orden', $ordenIngresado)
@@ -246,27 +246,27 @@ if (!$replanteo) {
     continue; // NO crear nada si no existe
 }
 
-       
+
 
         // 3. Guardar Mano de Obra apuntando al ID real del Replanteo
         $presupuesto->manoDeObra()->updateOrCreate(
-            ['id' => $fila['id'] ?? null],
+            ['id' => @$request->input('obra_id')[$i]],
             [
                 'presupuesto_id' => $presupuesto->id,
                 'replanteo_id'   => $replanteo->id, // 👈 El id real encontrado/creado
                 'orden'          => $ordenIngresado,
-                'comentario'     => $fila['comentario'] ?? '',
-                'categoria'      => $fila['categoria'],
-                'cantidad'       => $fila['cantidad'] ?? 0,
-                'dias'           => $fila['dias'] ?? 0,
-                'valor_jornal'   => $fila['valor_jornal'] ?? 0,
+                'comentario'     => @$request->input('obra_comentario')[$i],
+                'categoria'      => @$request->input('obra_categoria')[$i],
+                'cantidad'       => @$request->input('obra_cantidad')[$i],
+                'dias'           => @$request->input('obra_dias')[$i],
+                'valor_jornal'   => @$request->input('obra_valor_jornal')[$i],
             ]
         );
     }
 }
 
-    
-          
+
+
 
 
          // Guardar gastos fijos
@@ -275,8 +275,8 @@ if (!$replanteo) {
       //  $presupuesto->gastos_fijos = json_encode($gastosFijos);
      //   $presupuesto->save();
 
-     
-        
+
+
         // 4. Guardar Materiales (secuencial)
         foreach ($request->materiales as $material) {
             if (isset($material['eliminar']) && $material['eliminar'] == 1) {
@@ -285,18 +285,18 @@ if (!$replanteo) {
                 }
                 continue;
             }
-        
+
             // ⚠️ Validar si existe el replanteo
             $replanteo = \App\Models\Replanteo::where('orden', $material['orden'] ?? 1)
                 ->where('presupuesto_id', $presupuesto->id)
                 ->first();
-        
+
             if (!$replanteo) {
                 continue; // Si no existe el replanteo, NO guardar este material
             }
-        
+        \Log::info('material',[$material]);
             Material::updateOrCreate(
-                ['id' => $material['id']],
+                ['id' => @$material['id']],
                 [
                     'presupuesto_id' => $presupuesto->id,
                     'descripcion' => $material['descripcion'],
@@ -309,15 +309,15 @@ if (!$replanteo) {
                 ]
             );
         }
-        
-             
+
+
 
         if ($request->has('gasto_fijo_id')) {
             foreach ($request->gasto_fijo_id as $index => $gastoId) {
                 $seleccionado = in_array($gastoId, $request->gasto_seleccionado ?? []);
                 $cantidad = $request->gasto_cantidad[$index] ?? null;
                 $valor = $request->gasto_valor[$index] ?? null;
-        
+
                 if ($seleccionado) {
                     GastoFijoPresupuesto::updateOrCreate(
                         [
@@ -394,26 +394,26 @@ $presupuesto->update([
 
 
 
-    
+
         return redirect()->route('presupuestos.edit', $presupuesto->id)
                          ->with('success', 'Presupuesto guardado correctamente.');
     }
-    
 
-   
+
+
 
     public function edit($id)
 {
-    
+
     //Carga el Pdre
     $presupuesto = Presupuesto::with('replanteos', 'materiales', 'replanteos.materiales', 'replanteos.manoDeObra', 'manoDeObra.replanteo')
                               ->findOrFail($id);
-                     
+
     //Carga el Hijo
     $presupuesto->load('hijos'); // carga los presupuestos hijos del padre
      $laudos = \App\Models\LaudoOperario::orderBy('orden')->get();
      $laudosMap = $laudos->keyBy('categoria');
-     
+
 
      // Cargar valores de jornal para cada registro de mano de obra
      $presupuesto->manoDeObra->transform(function ($item) use ($laudosMap) {
@@ -422,11 +422,11 @@ $presupuesto->update([
             $categoria = $item->categoria;
             $item->valor_jornal = $laudosMap[$categoria]->total_jornal ?? 0;
         }
-    
+
         $item->total = $item->cantidad * $item->dias * $item->valor_jornal;
         return $item;
     });
-    
+
 
      $gastosFijos = \App\Models\GastoFijoConfigurable::all();
      $presupuesto->load('gastosFijos');

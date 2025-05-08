@@ -4,7 +4,7 @@
   <button class="btn btn-secondary mb-2" type="button" onclick="agregarFilaMateriales(this)">
       ➕ Agregar Fila
   </button>
-  
+
 
 </div>
 
@@ -25,6 +25,9 @@
       </tr>
     </thead>
     <tbody>
+        <?php
+        $total = 0;
+        ?>
       @forelse ($presupuesto->materiales as $i => $material)
         <tr>
           {{-- Hidden fields --}}
@@ -61,7 +64,19 @@
 
           <td class="latas">—</td>
 
-          <td class="totalFila" data-total="0">$ 0,00</td>
+          @php
+            $totalFila = 0;
+            if (!empty($material->manos) && !empty($material->rendimiento) && $material->rendimiento>0 && !empty($material->litros_por_lata) && $material->litros_por_lata > 0) {
+                $cantLatas = ceil(($material->manos * $material->cantidad_unidades) / $material->rendimiento / $material->litros_por_lata);
+                $totalFila = $cantLatas * $material->costo_unitario;
+            } else {
+                $totalFila = $material->cantidad_unidades * $material->costo_unitario;
+            }
+            $total += $totalFila;
+        @endphp
+        <td class="totalFila" data-total="{{ $totalFila }}">
+            $ {{ number_format($totalFila, 2, ',', '.') }}
+        </td>
 
           <td>
             <button type="button" class="btn btn-danger btn-sm" onclick="eliminarFila(this)">🗑️</button>
@@ -111,7 +126,7 @@
     <tfoot>
       <tr>
         <td colspan="8" class="text-end fw-bold">Total Materiales:</td>
-        <td id="totalMaterialesTabla" class="fw-bold">$ 0,00</td>
+        <td id="totalMaterialesTabla" class="fw-bold">$ {{ $total }}</td>
         <td></td>
       </tr>
     </tfoot>

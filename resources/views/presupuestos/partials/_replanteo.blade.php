@@ -2,10 +2,10 @@
 
  <h4 class="mt-4">Replanteo de Tareas</h4>
  <div class="d-flex gap-2 mb-2">
- 
+
 
 <button class="btn btn-secondary mb-2" type="button" onclick="agregarFilaReplanteo(this)">
-    ➕ Agregar Fila
+    ➕ Agregar Filas
 </button>
 
 </div>
@@ -25,6 +25,7 @@
     </thead>
 
     <tbody>
+
       @forelse ($presupuesto->replanteos as $i => $tarea)
         <tr>
           <!-- Hidden Inputs -->

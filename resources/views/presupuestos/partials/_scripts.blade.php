@@ -1,13 +1,15 @@
 <script>
     var parseFloatOrZero = (v) => isNaN(parseFloat(v)) ? 0 : parseFloat(v);
-    
+
     // ============ FUNCIONES DE AGREGAR FILAS =============
-    
+
     window.agregarFilaReplanteo = function (boton) {
+
     const formulario = boton.closest('form');
     const tabla = formulario.querySelector('#tablaReplanteo tbody');
     const filas = tabla.querySelectorAll('tr');
     const ultimaFila = filas[filas.length - 1];
+
     const nuevaFila = ultimaFila.cloneNode(true);
 
     const nuevoIndex = filas.length; // cantidad de filas actuales
@@ -21,8 +23,8 @@
 
             if (name.includes('[id]')) {
                 input.value = ''; // borrar id
-            } else if (name.includes('[orden]')) {
-                input.value = nuevoIndex + 1; // orden correlativo (1,2,3)
+            } else if (name.includes('orden')) {
+                input.value = parseInt(input.value) + 1; // orden correlativo (1,2,3)
             } else if (name.includes('[fila_orden_interno]')) {
                 input.value = nuevoIndex + 1; // fila interna correlativa
             } else if (name.includes('[eliminar]')) {
@@ -41,7 +43,7 @@
 
 
 
-    
+
 window.agregarFilaMateriales = function (boton) {
     const formulario = boton.closest('form');
     const tabla = formulario.querySelector('#tablaMateriales tbody');
@@ -88,7 +90,7 @@ window.agregarFilaMateriales = function (boton) {
     updateResumenFinal(formulario);
 };
 
-    
+
  window.agregarFilaManoDeObra = function (boton) {
     const formulario = boton.closest('form');
     const tabla = formulario.querySelector('.tabla-mano-obra tbody');
@@ -128,34 +130,34 @@ window.agregarFilaMateriales = function (boton) {
 };
 
 
-    
+
     // ============ FUNCIÓN DE ELIMINAR FILAS =============
-    
+
     window.eliminarFila = function (boton) {
         const fila = boton.closest('tr');
         const tabla = fila.closest('table');
         const tbody = tabla.querySelector('tbody');
-    
+
         const totalFilas = tbody.querySelectorAll('tr:not([style*="display: none"])').length;
-    
+
         if (totalFilas <= 1) {
             alert('Debe haber al menos una fila en esta sección.');
             return;
         }
-    
+
         const inputEliminar = fila.querySelector('input[name*="[eliminar]"]');
         if (inputEliminar) {
             inputEliminar.value = 1;
         }
-    
+
         fila.style.display = 'none';
-    
+
         updateResumenFinal();
 
     };
-    
+
     // ============ FUNCIÓN PRINCIPAL DE CÁLCULOS =============
-    
+
     window.updateResumenFinal = function (formulario) {
     if (!formulario) return;
 
@@ -269,7 +271,7 @@ if (totalTablaMO) {
     const precioPorM2 = superficie > 0 ? totalFinal / superficie : 0;
 
     // ✅ Actualizar DOM
-  
+
     const actualizar = (id, valor, sufijo = "$") => {
         const el = formulario.querySelector(`#${id}`);
         if (el) el.textContent = `${sufijo} ${valor.toFixed(2).replace('.', ',')}`;
@@ -315,9 +317,9 @@ window.beforeSubmit = function (formulario) {
     }
 };
 
-    
+
     // ============ EVENTOS =============
-    
+
     document.addEventListener('input', (e) => {
     const formulario = e.target.closest('form');
     if (!formulario) return;
@@ -343,5 +345,4 @@ window.beforeSubmit = function (formulario) {
 
 
     </script>
-    
-    
+
