@@ -16,8 +16,10 @@
 
     // Actualizar INPUTS en la nueva fila
     nuevaFila.querySelectorAll('input').forEach(input => {
+
         const name = input.getAttribute('name');
         if (name) {
+
             const nuevoName = name.replace(/\[\d+\]/, `[${nuevoIndex}]`);
             input.setAttribute('name', nuevoName);
 
@@ -34,8 +36,9 @@
             }
         }
     });
-
+    nuevaFila.style.display = '';
     tabla.appendChild(nuevaFila);
+    console.log('nuevaFila',nuevaFila);
 
     updateResumenFinal(formulario);
 };
@@ -83,7 +86,7 @@ window.agregarFilaMateriales = function (boton) {
     if (latasCell) {
         latasCell.textContent = "—";
     }
-
+    nuevaFila.style.display = '';
     tabla.appendChild(nuevaFila);
 
     // 🔥 Nueva línea para forzar actualizar los totales después de agregar fila
@@ -123,7 +126,7 @@ window.agregarFilaMateriales = function (boton) {
         totalCell.dataset.total = "0";
         totalCell.textContent = "$ 0,00";
     }
-
+    nuevaFila.style.display = '';
     tabla.appendChild(nuevaFila);
 
     updateResumenFinal(formulario);
