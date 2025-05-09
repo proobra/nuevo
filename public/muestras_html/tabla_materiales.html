@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Materiales - Proobra</title>
+  <style>
+    table, th, td {
+      border: 1px solid #aaa;
+      border-collapse: collapse;
+      padding: 8px;
+    }
+    input {
+      width: 100px;
+    }
+    tfoot td {
+      font-weight: bold;
+    }
+    .btn-agregar {
+      margin: 10px 0;
+      padding: 6px 12px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .resumen {
+      margin-top: 20px;
+      padding: 12px;
+      border: 1px solid #ccc;
+      background: #f5f5f5;
+      width: fit-content;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Tabla de Materiales</h2>
+
+<button class="btn-agregar" onclick="agregarFila()">+ Agregar fila</button>
+
+<table id="tablaMateriales">
+  <thead>
+    <tr>
+      <th>Descripción</th>
+      <th>Unidades</th>
+      <th>Manos</th>
+      <th>Rendimiento</th>
+      <th>Litros x Lata</th>
+      <th>Costo por Lata</th>
+      <th>Cant. Latas</th>
+      <th>Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><input value="Pintura Blanca"></td>
+      <td><input type="number" value="100"></td>
+      <td><input type="number" value="2"></td>
+      <td><input type="number" value="8"></td>
+      <td><input type="number" value="4"></td>
+      <td><input type="number" value="500"></td>
+      <td class="latas">0</td>
+      <td class="totalFila">$ 0,00</td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td colspan="7" style="text-align: right;">Total General:</td>
+      <td id="totalGeneral">$ 0,00</td>
+    </tr>
+  </tfoot>
+</table>
+
+<div class="resumen">
+  <h3>Resumen Final</h3>
+  <p>Total de Materiales: <strong id="resumenTotal">$ 0,00</strong></p>
+</div>
+
+<script>
+  const formatoUYU = new Intl.NumberFormat('es-UY', {
+    style: 'currency',
+    currency: 'UYU',
+    minimumFractionDigits: 2
+  });
+
+  function calcularFila(fila) {
+  const unidades = parseFloat(fila.children[1].children[0].value) || 0;
+  const manos = parseFloat(fila.children[2].children[0].value);
+  const rendimiento = parseFloat(fila.children[3].children[0].value);
+  const litros = parseFloat(fila.children[4].children[0].value);
+  const costoLata = parseFloat(fila.children[5].children[0].value) || 0;
+
+  let latas = '—';
+  let total = 0;
+
+  if (manos > 0 && rendimiento > 0 && litros > 0) {
+    const latasCrudo = (manos * unidades) / rendimiento / litros;
+    latas = Math.ceil(latasCrudo);
+    total = latas * costoLata;
+  } else if (unidades > 0 && costoLata > 0) {
+    total = unidades * costoLata;
+  }
+
+  fila.querySelector('.latas').textContent = latas;
+  const totalCell = fila.querySelector('.totalFila');
+  totalCell.textContent = formatoUYU.format(total);
+  totalCell.dataset.total = total.toFixed(2); // Guardamos el valor real como dato
+}
+
+function calcularTodo() {
+  const filas = document.querySelectorAll('#tablaMateriales tbody tr');
+  let totalGeneral = 0;
+
+  filas.forEach(fila => {
+    calcularFila(fila);
+    const totalFila = parseFloat(fila.querySelector('.totalFila').dataset.total) || 0;
+    totalGeneral += totalFila;
+  });
+
+  document.getElementById('totalGeneral').textContent = formatoUYU.format(totalGeneral);
+  document.getElementById('resumenTotal').textContent = formatoUYU.format(totalGeneral);
+}
+
+
+  function agregarFila() {
+    const tbody = document.querySelector('#tablaMateriales tbody');
+    const fila = document.createElement('tr');
+    fila.innerHTML = `
+      <td><input></td>
+      <td><input type="number" value="0"></td>
+      <td><input type="number" value="0"></td>
+      <td><input type="number" value="1"></td>
+      <td><input type="number" value="1"></td>
+      <td><input type="number" value="0"></td>
+      <td class="latas">—</td>
+      <td class="totalFila">$ 0,00</td>
+    `;
+    tbody.appendChild(fila);
+    fila.querySelectorAll('input').forEach(input => {
+      input.addEventListener('input', calcularTodo);
+    });
+  }
+
+  document.querySelectorAll('#tablaMateriales tbody input').forEach(input => {
+    input.addEventListener('input', calcularTodo);
+  });
+
+  calcularTodo();
+</script>
+
+</body>
+</html>
