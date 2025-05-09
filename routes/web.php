@@ -94,6 +94,17 @@ Route::post('/presupuestos/{id}/en-revision', [PresupuestoController::class, 'en
 Route::get('/presupuestos/{id}/crear-hijo', [PresupuestoController::class, 'crearHijo'])->name('presupuestos.crear_hijo');
 
 
+// Ruta del dashboard
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->name('dashboard');
+
+// Redirección del inicio al dashboard
+Route::get('/', function () {
+    return redirect()->route('dashboard');
+});
+
+
 });
 
 // Autenticación
