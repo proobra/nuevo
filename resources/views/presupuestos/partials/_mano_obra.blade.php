@@ -35,7 +35,7 @@
           <input type="hidden" name="obra_id[]" value="{{ $obra->id }}">
           <input type="hidden" name="obra_eliminar[]" value="0">
 
-          <td><input class="form-control obra_id_tarea" name="obra_id_tarea[]" type="number" value="{{ $obra->replanteo->orden ?? 1 }}"></td>
+          <td width="80"><input class="form-control obra_id_tarea" name="obra_id_tarea[]" type="number" value="{{ $obra->replanteo->orden ?? 1 }}"></td>
           <td class="text-center"><input class="form-control text-center" style="width: 40px;" name="obra_fila[]" type="number" value="{{ $i + 1 }}" readonly></td>
           <td><input class="form-control obra_comentario" name="obra_comentario[]" type="text" value="{{ $obra->comentario }}"></td>
           <td>
@@ -50,8 +50,8 @@
               @endforeach
             </select>
           </td>
-          <td><input class="form-control obra_cantidad" name="obra_cantidad[]" type="number" step="0.01" value="{{ $obra->cantidad }}"></td>
-          <td><input class="form-control obra_dias" name="obra_dias[]" type="number" step="0.01" value="{{ $obra->dias }}"></td>
+          <td width="100"><input class="form-control obra_cantidad" name="obra_cantidad[]" type="number" step="0.01" value="{{ $obra->cantidad }}"></td>
+          <td width="100"><input class="form-control obra_dias" name="obra_dias[]" type="number" step="0.01" value="{{ $obra->dias }}"></td>
           <td><input class="form-control valor-jornal" name="obra_valor_jornal[]" type="number" step="0.01" value="{{ number_format($obra->valor_jornal, 2, '.', '') }}" readonly></td>
           @php
     $totalFila = $obra->valor_jornal * $obra->cantidad * $obra->dias;

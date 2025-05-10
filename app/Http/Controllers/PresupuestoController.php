@@ -149,6 +149,9 @@ class PresupuestoController extends Controller
               $presupuesto->iva_monto = $request->input('iva_monto', 0);
               $presupuesto->bps_monto = $request->input('bps_monto', 0);
               $presupuesto->total_final = $request->input('total_final', 0);
+                $presupuesto->precio_por_m2 = $request->input('precio_por_m2', 0);
+                $presupuesto->porcentaje_utilidad_sobre_costos = $request->input('porcentaje_utilidad_sobre_costos', 0);
+                $presupuesto->porcentaje_utilidad = $request->input('porcentaje_utilidad', 0);
 
 
 
@@ -408,7 +411,6 @@ $presupuesto->update([
     //Carga el Pdre
     $presupuesto = Presupuesto::with('replanteos', 'materiales', 'replanteos.materiales', 'replanteos.manoDeObra', 'manoDeObra.replanteo')
                               ->findOrFail($id);
-
     //Carga el Hijo
     $presupuesto->load('hijos'); // carga los presupuestos hijos del padre
      $laudos = \App\Models\LaudoOperario::orderBy('orden')->get();
@@ -658,6 +660,17 @@ public function crearHijo($id)
         $nuevaMano->save();
     }
 
+    foreach ($presupuestoPadre->gastosFijos as $gasto) {
+        $nuevoGasto = $gasto->replicate();
+        $nuevoGasto->presupuesto_id = $nuevoPresupuesto->id;
+        $nuevoGasto->save();
+    }
+    //copy replanteos
+    foreach ($presupuestoPadre->replanteos as $replanteo) {
+        $nuevoReplanteo = $replanteo->replicate();
+        $nuevoReplanteo->presupuesto_id = $nuevoPresupuesto->id;
+        $nuevoReplanteo->save();
+    }
     return redirect()->route('presupuestos.edit', $nuevoPresupuesto->id)
                      ->with('success', '✅ Presupuesto hijo creado correctamente.');
 }

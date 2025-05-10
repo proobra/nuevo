@@ -33,7 +33,7 @@
           <input type="hidden" name="replanteo_eliminar[]" value="0" class="eliminar-material">
 
           <!-- Orden -->
-          <td>
+          <td width="80">
             <input type="number" name="replanteo_orden[]" class="form-control" value="{{ $tarea->orden }}">
           </td>
 
@@ -43,12 +43,12 @@
           </td>
 
           <!-- m2 -->
-          <td>
+          <td width="100">
             <input type="number" step="0.01" name="replanteo_metros2[]" class="form-control" value="{{ $tarea->m2 }}">
           </td>
 
           <!-- Días -->
-          <td>
+          <td width="80">
             <input type="number" step="0.01" name="replanteo_dias[]" class="form-control" value="{{ $tarea->dias }}">
           </td>
 

@@ -1,5 +1,5 @@
 <!-- Resumen Totales -->
-<h4 class="mt-5">Resumen Final</h4>
+<h4 class="mt-5">{{@$titulo ?? "Resumen Final"}}</h4>
 
 <div class="table-responsive">
   <table class="table table-bordered">
@@ -29,17 +29,44 @@
         <td><span id="total_final">${{ number_format($presupuesto->total_final ?? 0, 2, ',', '.') }}</span></td>
       </tr>
       <tr><th>Precio por m² (general)</th>
-        <td><span id="precioPorM2">—</span></td>
+        <td><span id="precioPorM2">${{ number_format($presupuesto->precio_por_m2 ?? 0, 2, ',', '.') }}</span></td>
       </tr>
+      @if (@$utilidadPorPresupuestoHijo)
       <tr><th>% Utilidad sobre MO + Materiales</th>
-        <td><span id="porcentajeUtilidadSobreCostos">—</span></td>
+        <td>
+        @foreach ($presupuesto->porcentaje_utilidad_sobre_costos as $index => $utilidad)
+          <span >
+            Presupuesto {{ ++$index }}. {{ number_format($utilidad, 2, ',', '.') }} @if($index < count($presupuesto->porcentaje_utilidad_sobre_costos) )<br> @endif
+          </span>
+        @endforeach
+        <span >
+
+             </span></td>
+      </tr>
+        <tr><th>% Utilidad sobre mano de obra</th>
+            <td>
+            @foreach ($presupuesto->porcentaje_utilidad as $index => $utilidad)
+            <span >
+                Presupuesto {{ ++$index }}. {{ number_format($utilidad, 2, ',', '.') }} @if($index < count($presupuesto->porcentaje_utilidad) )<br> @endif
+            </span>
+            @endforeach
+            <span >
+
+                 </span></td>
+      @else
+      <tr><th>% Utilidad sobre MO + Materiales</th>
+        <td><span id="porcentajeUtilidadSobreCostos">
+            {{ $presupuesto->porcentaje_utilidad_sobre_costos ? number_format($presupuesto->porcentaje_utilidad_sobre_costos, 2, ',', '.') : '-' }}</span></td>
       </tr>
       <tr><th>% Utilidad sobre mano de obra</th>
-        <td><span id="porcentajeUtilidad">—</span></td>
+        <td><span id="porcentajeUtilidad">
+         {{ $presupuesto->porcentaje_utilidad ? number_format($presupuesto->porcentaje_utilidad, 2, ',', '.') : '-' }}</span></td>
       </tr>
+
+      @endif
     </tbody>
   </table>
 
-
+</div>
 
 
