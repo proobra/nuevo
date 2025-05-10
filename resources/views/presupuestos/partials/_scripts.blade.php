@@ -310,6 +310,9 @@ if (totalTablaMO) {
     actualizarInput('iva_monto', iva);
     actualizarInput('bps_monto', bps);
     actualizarInput('total_final', totalFinal);
+    actualizarInput('precio_por_m2', precioPorM2);
+    actualizarInput('porcentaje_utilidad', utilidadSobreMO);
+    actualizarInput('porcentaje_utilidad_sobre_costos', utilidadSobreCostos);
 };
 
 

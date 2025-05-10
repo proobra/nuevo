@@ -34,7 +34,7 @@
           <input type="hidden" name="materiales[{{ $i }}][id]" value="{{ $material->id }}">
           <input type="hidden" name="materiales[{{ $i }}][eliminar]" value="0" class="eliminar-material">
 
-          <td>
+          <td width="80">
             <input class="form-control material_id_tarea" name="materiales[{{ $i }}][orden]" type="number" value="{{ old('materiales.' . $i . '.orden', $material->orden ?? 1) }}">
           </td>
 
@@ -42,7 +42,7 @@
             <input class="form-control material-descripcion" name="materiales[{{ $i }}][descripcion]" type="text" value="{{ $material->descripcion }}">
           </td>
 
-          <td>
+          <td width="60">
             <input class="form-control material-cantidad" name="materiales[{{ $i }}][cantidad_unidades]" type="number" value="{{ $material->cantidad_unidades }}">
           </td>
 
@@ -84,7 +84,7 @@
         </tr>
       @empty
         <tr>
-          <td>
+          <td width="80">
             <input class="form-control material_id_tarea" name="materiales[0][orden]" type="number" value="1">
           </td>
 
