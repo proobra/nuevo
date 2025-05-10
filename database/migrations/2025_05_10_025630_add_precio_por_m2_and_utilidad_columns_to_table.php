@@ -23,8 +23,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('table', function (Blueprint $table) {
-            //
+        Schema::table('presupuestos', function (Blueprint $table) {
+            $table->dropColumn('precio_por_m2');
+            $table->dropColumn('porcentaje_utilidad_sobre_costos');
+            $table->dropColumn('porcentaje_utilidad');
         });
     }
 };
