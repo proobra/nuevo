@@ -665,7 +665,6 @@ public function crearHijo($id)
         $nuevoGasto->presupuesto_id = $nuevoPresupuesto->id;
         $nuevoGasto->save();
     }
-    //copy replanteos
     foreach ($presupuestoPadre->replanteos as $replanteo) {
         $nuevoReplanteo = $replanteo->replicate();
         $nuevoReplanteo->presupuesto_id = $nuevoPresupuesto->id;

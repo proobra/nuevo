@@ -82,7 +82,6 @@
         @endforeach
 
         @php
-        // suma los totales del presupuesto padre y sus hijos
         $totalFinal = ($presupuesto->total_final ?? 0) + @$totalFinalHijos;
         $iva = ($presupuesto->iva_monto ?? 0) + @$iva;
         $bps = ($presupuesto->bps_monto ?? 0) + @$bps;
